@@ -1,3 +1,9 @@
+/**
+* You can use this xsjs file with the next url:
+*   http://hanatest02:8000/RamsesProject/xsjs/GetBPList_lib.xsjs?bpType=C&top=5
+*/
+
+
 // Complete Library Path and Library Name 
 // in this case /RamsesProject/xsjs/sampleLib.xsjslib
 $.import("RamsesProject.xsjs", "sampleLib");
