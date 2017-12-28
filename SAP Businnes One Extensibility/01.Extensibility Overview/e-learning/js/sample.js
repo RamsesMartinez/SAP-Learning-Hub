@@ -8,7 +8,6 @@ $(document).ready(function() {
   });
 });
 
-
 function createContent(){
   // new element
   var newHeading = document.createElement('h1');
