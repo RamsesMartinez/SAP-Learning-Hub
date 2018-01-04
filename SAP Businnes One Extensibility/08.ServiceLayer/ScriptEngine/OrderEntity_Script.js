@@ -1,5 +1,5 @@
 var ServiceLayerContext = require('ServiceLayerContext.js');
-var httpModule = require('HttpModule.js');
+var http = require('HttpModule.js');
 var Order = require('EntityType/Document.js');
 
 function GET() {
@@ -15,9 +15,9 @@ function GET() {
 
 function POST() {
   var responseBody = '';
-  var jsonObj = httpModule.request.getJsonObj();
+  var jsonObj = http.request.getJsonObj();
   if (!jsonObj) {
-    throw httpModule.ScriptException(httpModule.HttpStatus.HTTP_BAD_REQUEST, "missing request payload");
+    throw http.ScriptException(http.HttpStatus.HTTP_BAD_REQUEST, "missing request payload");
   }
   
   var order = Order.create(jsonObj);
@@ -27,9 +27,9 @@ function POST() {
   var res = slContext.Orders.add(order);
   
   if(!res.isOK()) {
-    return httpModule.response.send(httpModule.HttpStatus.HTTP_BAD_REQUEST, res.body);
+    return http.response.send(http.HttpStatus.HTTP_BAD_REQUEST, res.body);
   } else {
     responseBody = '{ "Order": [{"DocEntry": ' + res.body.DocEntry + '}]}';
-    return httpModule.response.send(httpModule.HttpStatus.HTTP_CREATED, responseBody);
+    return http.response.send(http.HttpStatus.HTTP_CREATED, responseBody);
   }
 }
