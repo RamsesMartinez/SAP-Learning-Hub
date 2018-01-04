@@ -1,14 +1,17 @@
 var ServiceLayerContext = require('ServiceLayerContext.js');
-var http = require('HttpModule.js');
+var httpModule = require('HttpModule.js');
 var Order = require('EntityType/Document.js');
 var DeliveryNote = require('EntityType/Document.js');
 
+function GET() {
+  var respondeBody = '';
+}
 function POST() {
   var responseBody = '';
-  var jsonObj = http.request.getJsonObj();
+  var jsonObj = httpModule.request.getJsonObj();
   
   if (!jsonObj) {
-    throw http.ScriptException(http.HttpStatus.HTTP_BAD_REQUEST, 'missing request payload');
+    throw httpModule.ScriptException(httpModule.HttpStatus.HTTP_BAD_REQUEST, 'missing request payload');
   }
   var order = Order.create(jsonObj);
   order.Comments = 'Added via SL ScriptEngine';
@@ -21,7 +24,7 @@ function POST() {
   var res = slContext.Orders.add(order);
   if (!res.isOK()) {
     slContext.rollbackTransaction();
-    return http.response.send(http.HttpStatus.HTTP_BAD_REQUEST, res.body);
+    return httpModule.response.send(httpModule.HttpStatus.HTTP_BAD_REQUEST, res.body);
   }
   // get the newly created order from the response body
   var newOrder = Order.create(res.body);
@@ -29,10 +32,10 @@ function POST() {
   // create a delivery based on the order 
   var deliveryNote = new DeliveryNote();
   deliveryNote.DocDueDate = newOrder.DocDueDate;
-  deliveryNote.CardCode = nerOrder.CardCode;
+  deliveryNote.CardCode = newOrder.CardCode;
   deliveryNote.DocumentLines = new DeliveryNote.DocumentLineCollection();
-  
-  for (var ln = 0; ln < order.DocumentLines.length; ++ln) {
+
+  for (var lineNum = 0; lineNum < order.DocumentLines.length; ++lineNum ) {
     var line = new DeliveryNote.DocumentLine();
     line.BaseType = 17;
     line.BaseEntry = newOrder.DocEntry;
@@ -45,7 +48,7 @@ function POST() {
   // end the transaction: rollback or commit
   if (!res.isOK()) {
     slContext.rollbackTransaction();
-    return http.response.send(http.HttpStatus.HTTP_BAD_REQUEST, res.body);
+    return httpModule.response.send(httpModule.HttpStatus.HTTP_BAD_REQUEST, res.body);
   }
   else {
     slContext.commitTransaction();
@@ -54,8 +57,9 @@ function POST() {
     *   + "}], \"DeliveryNote\": [{\"DocEntry\":" + res.body.DocEntry +"}]}";
     */
     
-    responseBody = '{"Order": [{"DocEntry":' + newOrder.DocEntry + 
-      '}], "DeliveryNote": [{"DocEntry":' + res.body.DocEntry +'}]}';
-    return http.response.send(http.HttpStatus.HTTP_CREATED, responseBody);
+    responseBody = "{\"Order\": [{\"DocEntry\":"+ newOrder.DocEntry +
+      "}], \"DeliveryNote\": [{\"DocEntry\":"+ res.body.DocEntry +"}]}";
+    return httpModule.response.send(httpModule.HttpStatus.HTTP_CREATED, responseBody);
   }
 }
+
