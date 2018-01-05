@@ -2,17 +2,6 @@ var ServiceLayerContext = require('ServiceLayerContext.js');
 var http = require('HttpModule.js');
 var Order = require('EntityType/Document.js');
 
-function GET() {
-  var queryOption = "$select=DocNum, DocTotal, CardName, CardCode & $filter=contains(CardCode, 'B1DevELB1') & $top=5 & $orderby=CardCode",
-      slContext = new ServiceLayerContext(),
-      retCaseSensitive = slContext.Orders.query(queryOption),
-      retCaseInsensitive = slContext.query("Orders", queryOption, true);
-
-  http.response.setStatus(http.HttpStatus.HTTP_OK);
-  http.response.setContent({ "CaseSensitive": retCaseSensitive.toArray(), "CaseInsensitive": retCaseInsensitive.toArray() });
-  http.response.send();
-}
-
 /**
  * Entry function the POST http request.
  * POST /b1s/v1/scripts/SYS/OrderEntity
