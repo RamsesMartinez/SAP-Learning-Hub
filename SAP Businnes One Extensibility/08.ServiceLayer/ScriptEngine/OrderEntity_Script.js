@@ -49,7 +49,6 @@ function POST() {
  * GET /b1s/v1/script/SYS/OrderEntity(key)
  *
  */
-
 function GET() {
   var responseBody = "";
   // Get the Order's key from the http request key value
@@ -65,12 +64,13 @@ function GET() {
   var dataSrvRes = slContext.Orders.get(key);
   // Order retrieve operation failed
   if (!dataSrvRes.isOK()) {
-    http.response.send(dataSrvRes.state, dataSrvRes.body);
+    http.response.send(dataSrvRes.status, dataSrvRes.body);
   }
   // Order retrieved successfully
   else {
     responseBody = '{ "Order": [{"DocEntry": ' + dataSrvRes.body.DocEntry + ', "DocNum": ' + dataSrvRes.body.DocNum +
-      ', "DocTotal": ' + dataSrvRes.body.DocTotal + ', "Comments": "' + dataSrvRes.body.Comments + '"}]}';
+      ', "DocTotal": ' + dataSrvRes.body.DocTotal + ', "Comments": "' + dataSrvRes.body.Comments +
+      ', "CardCode": ' + dataSrvRes.body.CardCode + ', "CardName": ' + dataSrvRes.body.CardName + '}]}';
     http.response.send(dataSrvRes.status, responseBody);
   }
 }
@@ -83,7 +83,7 @@ function GET() {
  * {"Comments": "Updated from Script Engine"}
  */
 
-function PATH() {
+function PATCH() {
   // Get the Order's key from the http request key value
   var key = http.request.getEntityKey();
   if (!key) {
@@ -103,7 +103,10 @@ function PATH() {
   var dataSrvRes = slContext.Orders.update(jsonObj, key);
   // Order updated successfully
   if (dataSrvRes.isOK()) {
-    http.response.send(dataSrvRes.status, dataSrvRes.body);
+    http.response.setContentType(http.ContentType.APPLICATION_JSON);
+    http.response.setStatus(http.HttpStatus.HTTP_OK);
+    http.response.setContent(dataSrvRes.body);
+    http.response.send();
   }
   // Order Updated operation failed
   else {
