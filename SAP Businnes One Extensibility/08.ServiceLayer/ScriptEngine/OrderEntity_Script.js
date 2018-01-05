@@ -14,7 +14,7 @@ function POST() {
   var jsonObj = http.request.getJsonObj();
   if (!jsonObj) {
     throw http.ScriptException(
-        http.HttpStatus.HTTP_BAD_REQUEST, "Fail to get the content of JSON format from the request payload");
+        http.HttpStatus.HTTP_BAD_REQUEST, "fail to get the content of JSON format from the request payload");
   }
 
   // Initialize the Order variable with the http request body
@@ -33,9 +33,9 @@ function POST() {
   if(!dataSrvRes.isOK()) {
     return http.response.send(http.HttpStatus.HTTP_BAD_REQUEST, dataSrvRes.body);
   }
-  // Add operation succesfully executed
+  // Add operation successfully executed
   else {
-    // Return only Docentry, DocNum, DocTotal and Comments properties
+    // Return only DocEntry, DocNum, DocTotal and Comments properties
     responseBody = '{ "Order": [{"DocEntry": ' + dataSrvRes.body.DocEntry + ', "DocNum": ' + dataSrvRes.body.DocNum +
       ', "DocTotal": ' + dataSrvRes.body.DocTotal + ', "Comments": "' + dataSrvRes.body.Comments + '"}]}';
     return http.response.send(http.HttpStatus.HTTP_CREATED, responseBody);
@@ -53,7 +53,7 @@ function POST() {
 function GET() {
   var responseBody = "";
   // Get the Order's key from the http request key value
-  var key = http.request.getEntituKey();
+  var key = http.request.getEntityKey();
   if (!key) {
     throw http.ScriptException(http.HttpStatus.HTTP_BAD_REQUEST, "Fail to get entity key from request URL");
   }
@@ -67,7 +67,7 @@ function GET() {
   if (!dataSrvRes.isOK()) {
     http.response.send(dataSrvRes.state, dataSrvRes.body);
   }
-  // Order retrieved succesfully
+  // Order retrieved successfully
   else {
     responseBody = '{ "Order": [{"DocEntry": ' + dataSrvRes.body.DocEntry + ', "DocNum": ' + dataSrvRes.body.DocNum +
       ', "DocTotal": ' + dataSrvRes.body.DocTotal + ', "Comments": "' + dataSrvRes.body.Comments + '"}]}';
@@ -87,7 +87,7 @@ function PATH() {
   // Get the Order's key from the http request key value
   var key = http.request.getEntityKey();
   if (!key) {
-    throw http.ScriptException(http.HttpStatus.HTTP_BAD_REQUEST, "Fail to get entity key from request URL");
+    throw http.ScriptException(http.HttpStatus.HTTP_BAD_REQUEST, "fail to get entity key from request URL");
   }
 
   // Check the http request body
@@ -113,7 +113,7 @@ function PATH() {
 
 
 /**
- * Entry function the FELETE http request
+ * Entry function the DELETE http request
  * DELETE /b1s/v1/scripts/SYS/OrderEntity(key)
  *
  * Operation Not implemented for this entity
