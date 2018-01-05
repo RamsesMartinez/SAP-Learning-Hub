@@ -10,7 +10,7 @@
     OnDemand=""
     OnPremise=""
     ExtName="ScriptEngineExtension"
-    ExtVersion="1.12.6"
+    ExtVersion="1.13"
     Contdata="Agasys S.A. de C.V."
     Partner="SYS"
     DBType="HANA"
